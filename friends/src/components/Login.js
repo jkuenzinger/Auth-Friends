@@ -1,12 +1,14 @@
 import React, {useState} from 'react';
 import {axiosWithAuth} from '../utils/axiosWithAuth.js'
 
-const login = (props) => {
+const Login = (props) => {
     const [credentials, setCredentials] = useState({});
         const login = e => {
             e.preventDefault();
-            axiosWithAuth().post('heep://localhost:5000/api/.login', credentials)
+            axiosWithAuth()
+            .post('http://localhost:5000/api/login', credentials)
             .then(res => {
+                console.log('sucessful login', res.data.payload)
                 localStorage.setItem('token', res.data.payload)
                 props.history.push('/')
             })
@@ -15,18 +17,18 @@ const login = (props) => {
 const handleChanges = e => {
     setCredentials({
         ...credentials,
-        [event.target.name]: event.target.value
+        [e.target.name]: e.target.value
     })
 }
 
 return(
     <div>
-        <form>
-            <input type='text' name='username' value={credentials.username} onchange={handleChanges}/>
-            <input type='password' name='password' value={credentials.username} onchange={handleChanges}/>
+        <form onSubmit={login}>
+            <input type='text' name='username' value={credentials.username} onChange={handleChanges}/>
+            <input type='password' name='password' value={credentials.password} onChange={handleChanges}/>
             <button>Login</button>
         </form>
     </div>
     )
 }
-export default login;
+export default Login;
